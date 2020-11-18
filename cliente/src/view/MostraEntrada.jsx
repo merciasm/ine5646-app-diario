@@ -1,7 +1,7 @@
 
 import React from 'react'
 import PropTypes from 'prop-types'
-import { EntradaDiario } from './model/modelos'
+import { EntradaDiario } from '../model/modelos'
 
 const MostraEntrada = (props) => {
   const entrada = props.entrada
