@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 
-import {pesquisa, carregaDados, adiciona} from './model/pesquisa'
+import {pesquisa, carregaDados, adiciona} from '../model/pesquisa'
 import {MostraEntrada, MostraSemEntrada, MostraSucesso, MostraEdicao} from './MostraEntrada.jsx'
 import Data from './Data.jsx'
 import GoogleLogin, { GoogleLogout } from 'react-google-login';
