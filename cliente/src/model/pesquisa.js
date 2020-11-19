@@ -12,7 +12,7 @@ async function carregaDados (userToken) {
 }
 
 async function acessaEntradas ( userToken) {
-  const u = `${URL_BASE}/busca/${userToken}`
+  const u = `${URL_BASE}/busca/`
   const jsonData = JSON.stringify({token: userToken})
   
   const resp = await window.fetch(u, { method: 'POST',
