@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import {pesquisa, carregaDados, adiciona} from '../model/pesquisa'
 import {MostraEntrada, MostraSemEntrada, MostraSucesso, MostraEdicao} from './MostraEntrada.jsx'
 import Data from './Data.jsx'
-import GoogleLogin, { GoogleLogout } from 'react-google-login';
+import GoogleLogin, { GoogleLogout } from 'react-google-login'
 
 const estadoInicial = {
   clientId:undefined,
@@ -27,14 +27,18 @@ function useModelo() {
 
   function onLogado(res){
     setEstado({...estado, entradaDiario: undefined, 
-        pesquisando: false,  logado: true, userToken:res.tokenId})  
+      pesquisando: false,  logado: true, userToken:res.tokenId})  
   }
 
   useEffect(() => {
+    function deuErro(erro) {
+      setEstado({...estadoInicial, nomeBotao: erro.message, cssBotao: 'button is-black', pesquisando: false})
+    }
+    
     window.fetch('/chave')
-    .then(resposta => resposta.json())
-    .then(googleKey => setEstado({...estadoInicial, clientId: googleKey}))
-    .catch(erro => deuErro(erro))
+      .then(resposta => resposta.json())
+      .then(googleKey => setEstado({...estadoInicial, clientId: googleKey}))
+      .catch(erro => deuErro(erro))
   }, [])
 
 
@@ -44,7 +48,7 @@ function useModelo() {
     }
     if(estado.logado){
       carregaDados(estado.userToken)
-      .then(diario => onDiarioCarregado(diario))
+        .then(diario => onDiarioCarregado(diario))
     }
   }, [estado.logado])
 
@@ -71,7 +75,7 @@ function useModelo() {
   }
 
   function onAdicionaEntrada(){
-    let resultado = adiciona(estado.userToken, estado.data, estado.entradaTexto, estado.diario)
+    adiciona(estado.userToken, estado.data, estado.entradaTexto, estado.diario)
     setEstado({...estado, viewAtual: 'cadastro sucesso'})
   }
   useEffect(() => {
@@ -81,7 +85,7 @@ function useModelo() {
 
     function onSemEntrada(){
       setEstado(estado => ({...estado, entradaDiario: undefined, cssBotao: 'button is-dark', 
-                              pesquisando: false, viewAtual: 'sem entrada'}))
+        pesquisando: false, viewAtual: 'sem entrada'}))
     }
   
     if (estado.pesquisando) {
@@ -109,46 +113,49 @@ function App () {
   let logoutBtn
 
 
-    if (estado.viewAtual === 'entrada') {
-      oEntrada = <MostraEntrada entrada={estado.entradaDiario} />
-    }
-    else if (estado.viewAtual === 'sem entrada'){
-      oEntrada = <MostraSemEntrada mostraAreaTexto={mostraAreaTexto} />
-    }
-    else if (estado.viewAtual === 'modo edição')
-    {
-      oEntrada = <MostraEdicao onAdicionaEntrada={onAdicionaEntrada} 
-                               alteraEntrada={alteraEntrada} 
-                               data={estado.data} />
-    }
-    else if (estado.viewAtual === 'cadastro sucesso'){
-      oEntrada = <MostraSucesso />
-    }
+  if (estado.viewAtual === 'entrada') {
+    console.log('modo entrada')
+    oEntrada = <MostraEntrada entrada={estado.entradaDiario} />
+  }
+  else if (estado.viewAtual === 'sem entrada'){
+    console.log('modo sem entrada')
 
-    if (estado.logado){
-      logoutBtn = <GoogleLogout
-                  buttonText="Logout"
-                  onLogoutSuccess={onDeslogado}
-                  />
-      area = <>
-          {logoutBtn}
-          <Data onDataValida={onDataValida} onDataInvalida={onDataInvalida}/>
-          <button className={estado.cssBotao}
-            onClick={onPesquisando}>
+    oEntrada = <MostraSemEntrada mostraAreaTexto={mostraAreaTexto} />
+  }
+  else if (estado.viewAtual === 'modo edição')
+  {
+    oEntrada = <MostraEdicao onAdicionaEntrada={onAdicionaEntrada} 
+      alteraEntrada={alteraEntrada} 
+      data={estado.data} />
+  }
+  else if (estado.viewAtual === 'cadastro sucesso'){
+    oEntrada = <MostraSucesso />
+  }
+
+  if (estado.logado){
+    logoutBtn = <GoogleLogout
+      buttonText="Logout"
+      onLogoutSuccess={onDeslogado}
+    />
+    area = <>
+      {logoutBtn}
+      <Data onDataValida={onDataValida} onDataInvalida={onDataInvalida}/>
+      <button className={estado.cssBotao}
+        onClick={onPesquisando}>
             pesquisar
-          </button>
-          {oEntrada}
-        </>
-    }
-    else if (estado.clientId){
-      area = <GoogleLogin
-              clientId={estado.clientId}
-              buttonText="Login"
-              onSuccess={onLogado}
-              onFailure={res => console.log(res)}
-              cookiePolicy={'single_host_origin'}
-            />
-    }
+      </button>
+      {oEntrada}
+    </>
+  }
+  else if (estado.clientId){
+    area = <GoogleLogin
+      clientId={estado.clientId}
+      buttonText="Login"
+      onSuccess={onLogado}
+      onFailure={res => console.log(res)}
+      cookiePolicy={'single_host_origin'}
+    />
+  }
 
   return (
     <div className='container is-fluid'>
