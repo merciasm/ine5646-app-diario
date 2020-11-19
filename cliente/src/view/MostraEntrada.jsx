@@ -31,7 +31,7 @@ const MostraSemEntrada = (props) => {
         </span>
       </h1>
       <button className='button is-dark'
-              onClick={mostraAreaTexto}>
+        onClick={mostraAreaTexto}>
               adicionar entrada
       </button>
     </div>
@@ -61,20 +61,30 @@ const MostraEdicao = (props) => {
   return (
     <div className='box'>
       <input className='input'
-      type='text'
-      title={'Nova entrada para' + data}
-      placeholder='Fale sobre seu dia'
-      onChange={alteraEntrada}/>
+        type='text'
+        title={'Nova entrada para' + data}
+        placeholder='Fale sobre seu dia'
+        onChange={alteraEntrada}/>
       <button className='button is-dark'
         onClick={onAdicionaEntrada}>
         submeter
       </button>
     </div>
-  );
+  )
 }
 
 MostraEntrada.propTypes = {
   entrada: PropTypes.instanceOf(EntradaDiario).isRequired
+}
+
+MostraSemEntrada.propTypes = {
+  mostraAreaTexto: PropTypes.func.isRequired
+}
+
+MostraEdicao.propTypes = {
+  onAdicionaEntrada: PropTypes.func.isRequired,
+  alteraEntrada: PropTypes.func.isRequired,
+  data: PropTypes.string.isRequired
 }
 
 export {MostraEntrada, MostraSemEntrada, MostraSucesso, MostraEdicao}

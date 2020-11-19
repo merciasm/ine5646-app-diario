@@ -13,7 +13,12 @@ async function carregaDados (userToken) {
 
 async function acessaEntradas ( userToken) {
   const u = `${URL_BASE}/busca/${userToken}`
-  const resp = await window.fetch(u)
+  const jsonData = JSON.stringify({token: userToken})
+  
+  const resp = await window.fetch(u, { method: 'POST',
+    headers: {'content-type': 'application/json'},
+    body: jsonData})
+    
   if (resp.ok === false) {
     throw new Error('Não foi possível acessar dados no servidor.')
   }
@@ -36,9 +41,9 @@ function objToEntrada (entrada) {
 async function adiciona ( userToken, data, entrada, diario) {
   const u = `${URL_BASE}/adiciona/`
   const jsonData = JSON.stringify({token: userToken, data: data, entrada: entrada})
-  const resp = await window.fetch(u, { method: "POST",
-                                      headers: {'content-type': 'application/json'},
-                                      body: jsonData})
+  const resp = await window.fetch(u, { method: 'POST',
+    headers: {'content-type': 'application/json'},
+    body: jsonData})
   if (resp.ok === false) {
     throw new Error('Não foi possível acessar dados no servidor.')
   }
@@ -46,7 +51,7 @@ async function adiciona ( userToken, data, entrada, diario) {
 }
 
 function pesquisa (diario, data) {
-  return diario.getEntrada(data);
+  return diario.getEntrada(data)
 }
 
 
